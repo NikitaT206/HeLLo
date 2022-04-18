@@ -1,17 +1,14 @@
 import { Timer } from './Timer'
 import { Result } from './Result'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 
 interface Letters {
   newGame: boolean,
-  timer: boolean,
-  result: boolean,
-  fadeOut: boolean,
-  resultText: string,
+  // timer: boolean,
   arrayOfLetters: string[],
   lettersDragStartHandler: Function,
   lettersDragEndHandler: Function,
-  onTimeOut: Function,
+  // onTimeOut: Function,
   level1: boolean,
   level2: boolean,
   level3: boolean,
@@ -28,6 +25,17 @@ export function Letters(props: Letters) {
     }
   }
 
+  const getRandom = useCallback(() => {
+    const random = Math.floor(Math.random() * 100)
+    return random
+  }, [])
+
+  useEffect(() => {
+    setInterval(() => {
+      getRandom()
+    }, 1000)
+  }, [getRandom])
+
   return (
     <div 
       className='letters'
@@ -37,8 +45,8 @@ export function Letters(props: Letters) {
       }
     >
     <Timer 
-      timer={props.timer} 
-      onTimeOut={props.onTimeOut}
+      // timer={props.timer} 
+      // onTimeOut={props.onTimeOut}
       level1={props.level1}
       level2={props.level2}
       level3={props.level3}
@@ -46,7 +54,7 @@ export function Letters(props: Letters) {
       level5={props.level5}
       level6={props.level6}
     />
-    <Result result={props.result} fadeOut={props.fadeOut} resultText={props.resultText}/>
+    <Result/>
 
     {props.arrayOfLetters.map((letter: string, index: number) => {
       return (
@@ -58,7 +66,7 @@ export function Letters(props: Letters) {
             props.level2 ? {animation: `level2 7s ease-in-out infinite alternate-reverse 0.${index}s`} : {} &&
             props.level3 ? level3(index) : {} &&
             props.level4 ? {animation: `level4 3s ease-in-out infinite  0.${index}s`} : {} &&
-            props.level5 ? {animation: `level5 2s ease-in-out infinite alternate-reverse 0.${index}s`} : {}
+            props.level5 ? {transform: `translateX(${getRandom()}%) translateY(${getRandom()}%)`} : {}
           }
           draggable={true}
           onDragStart={(event => props.lettersDragStartHandler(event, letter, index))}

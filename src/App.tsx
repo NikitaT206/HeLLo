@@ -3,6 +3,8 @@ import './App.css';
 import { DropZone } from './components/DropZone';
 import { Letters } from './components/Letters';
 import { string } from './constants/words';
+import { useActions } from './hooks/useActions';
+import { useTypedSelector } from './hooks/useTypedSelector';
 
 function App() {
 
@@ -13,9 +15,7 @@ function App() {
   const [level5, setLevel5] = useState(false)
   const [level6, setLevel6] = useState(false)
   const [level7, setLevel7] = useState(false)
-  const [level8, setLevel8] = useState(false)
-  const [level9, setLevel9] = useState(false)
-  const [level10, setLevel10] = useState(false)
+  
 
   const randomWord = returnWords()[Math.floor(Math.random() * returnWords().length)]
   const [word, setWord] = useState(randomWord)
@@ -29,17 +29,16 @@ function App() {
   const [win, setWin] = useState<boolean>(false)
   const [loose, setLoose] = useState<boolean>(false)
 
-  const [result, setResult] = useState<boolean>(false)
-  const [resultText, setResultText] = useState<string>('')
-
-  const [fadeOut, setFadeOut] = useState<boolean>(false)
   const [startGame, setStartGame] = useState(true)
   const [newGame, setNewGame] = useState<boolean>(false)
 
-  const [timer, setTimer] = useState<boolean>(false)
-
   const [count, setCount] = useState(0)
-  const [levelCount, setLevelCount] = useState(0)
+
+  const {showResult, setResultText, setFadeOutText} = useActions()
+  const {setStartTimer} = useActions()
+
+  const resultState = useTypedSelector(state => state.result)
+  const timeOut = useTypedSelector(state => state.timer.timeOut)
 
  
   function returnWords(n: number = 3) {
@@ -122,20 +121,20 @@ function App() {
   function winResult() {
     setCount(state => state + 1)
     setResultText('WIN')
-    setResult(true)
-    setFadeOut(true)
+    showResult(true)
+    setFadeOutText(true)
     setNewGame(false)
     setTimeout(() => {
-      setFadeOut(false)
+      setFadeOutText(false)
       setTimeout(() => {
         setWord(randomWord)
         setResultText(randomWord)
-        setFadeOut(true)
+        setFadeOutText(true)
         setTimeout(() => {
-          setFadeOut(false)
+          setFadeOutText(false)
           setTimeout(() => {
             setNewGame(true)
-            setResult(false)
+            showResult(false)
             setArrayOfLetters(randomWord.split('').sort(() => Math.random() - 0.5))
             setDropArray([])
           }, 1000)
@@ -146,19 +145,19 @@ function App() {
 
   function looseResult() {
     setResultText('LOOSE')
-    setResult(true)
-    setFadeOut(true)
+    showResult(true)
+    setFadeOutText(true)
     setArrayOfLetters([])
     setTimeout(() => {
-      setFadeOut(false)
+      setFadeOutText(false)
       setTimeout(() => {
         setWord(word)
         setResultText(word)
-        setFadeOut(true)
+        setFadeOutText(true)
         setTimeout(() => {
-          setFadeOut(false)
+          setFadeOutText(false)
           setTimeout(() => {
-            setResult(false)
+            showResult(false)
             setArrayOfLetters(word.split('').sort(() => Math.random() - 0.5))
             setDropArray([])
           }, 1000)
@@ -167,14 +166,9 @@ function App() {
     }, 1000)
   }
 
-  function timeOutHandler() {
-    setTimer(false)
-    setLoose(true)
-  }
-
   useEffect(() => {
     if (dropArray.length) {
-      setTimer(true)
+      setStartTimer(true)
     }
   }, [dropArray])
 
@@ -185,7 +179,7 @@ function App() {
       if (dropArray.join('') === word) {
         setWin(true)
         setLoose(false)
-        setTimer(false)
+        setStartTimer(false)
 
         setTimeout(() => {
           setWin(false)
@@ -195,7 +189,7 @@ function App() {
       else {
         setLoose(true)
         setWin(false)
-        setTimer(false)
+        setStartTimer(false)
 
         setTimeout(() => {
           setLoose(false)
@@ -221,36 +215,43 @@ function App() {
   }, [loose])
 
   useEffect(() => {
+    if (timeOut) {
+      looseResult()
+      setLoose(false)
+    }
+  }, [timeOut])
+
+  useEffect(() => {
     if (!count) {
       setNewGame(false)
-      setResult(true)
-      setFadeOut(true)
+      showResult(true)
+      setFadeOutText(true)
       setResultText('ПРИВЕТ')
       setWord('ПРИВЕТ')
   
       setTimeout(() => {
-        setFadeOut(false)
+        setFadeOutText(false)
         setNewGame(true)
   
         setTimeout(() => {
-          setResult(false)
+          showResult(false)
           setArrayOfLetters('ПРИВЕТ'.split(''))
         }, 1000)
       }, 2000)
     }
     else {
       setNewGame(false)
-      setResult(true)
-      setFadeOut(true)
+      showResult(true)
+      setFadeOutText(true)
       setResultText(word)
       setWord(word)
   
       setTimeout(() => {
-        setFadeOut(false)
+        setFadeOutText(false)
         setNewGame(true)
   
         setTimeout(() => {
-          setResult(false)
+          showResult(false)
           setArrayOfLetters(word.split('').sort(() => Math.random() - 0.5))
         }, 1000)
       }, 2000)
@@ -262,15 +263,10 @@ function App() {
     <div className="App">
       <div className='container'>
 
-        {result ? <div className='overlay'></div> : ''}
+        {resultState.showResult ? <div className='overlay'></div> : ''}
         
         <Letters 
           newGame={newGame} 
-          timer={timer}
-          onTimeOut={timeOutHandler}
-          result={result}
-          resultText={resultText}
-          fadeOut={fadeOut}
           arrayOfLetters={arrayOfLetters}
           lettersDragStartHandler={lettersDragStartHandler}
           lettersDragEndHandler={lettersDragEndHandler}

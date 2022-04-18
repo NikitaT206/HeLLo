@@ -1,13 +1,12 @@
-interface Result {
-  result: boolean,
-  resultText: string,
-  fadeOut: boolean
-}
+import { useTypedSelector } from '../hooks/useTypedSelector';
 
-export function Result(props: Result) {
+export function Result() {
+
+  const state = useTypedSelector(state => state.result)
+  
   return (
-    <div className={props.result ? 'result result_active' : 'result'}>
-      <h1 className={props.fadeOut ? 'result__text result__text_active' : 'result__text'}>{props.resultText}</h1>
+    <div className={state.showResult ? 'result result_active' : 'result'}>
+      <h1 className={state.fadeOutText ? 'result__text result__text_active' : 'result__text'}>{state.resultText}</h1>
     </div>
   )
 }

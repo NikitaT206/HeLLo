@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { useActions } from '../hooks/useActions'
+import { useTypedSelector } from '../hooks/useTypedSelector'
 
 interface TimerInterface {
-  timer: boolean,
-  onTimeOut: Function,
   level1: boolean,
   level2: boolean,
   level3: boolean,
@@ -12,8 +12,8 @@ interface TimerInterface {
 }
 
 export function Timer(props: TimerInterface) {
-  const [time, setTime] = useState<number | null>(10)
-  const [seconds, setSeconds] = useState<number | null>(time)
+  const {time, startTimer} = useTypedSelector(state => state.timer)
+  const {setTime, setStartTimer, timerRunning, timeOut} = useActions()
 
   useEffect(() => {
     if (props.level1) setTime(6)
@@ -26,36 +26,27 @@ export function Timer(props: TimerInterface) {
 
   useEffect(() => {
     let interval: any = null
-    
-    if (props.timer) {
+    clearInterval(interval)
+    if (startTimer) {
       interval = setInterval(() => {
-        setSeconds((state: any) => {          
-          if (state <= 0) {
-            clearInterval(interval)
-            props.onTimeOut()
-            return state = 0
-          }
-          return state - 1
-        })        
+        setStartTimer(true)
+        timerRunning()
+        if (time <= 0) {
+          clearInterval(interval)
+          timeOut()
+        }
       }, 1000)
-    } 
-
-    else {
-      setSeconds(time)
     }
-
     return () => clearInterval(interval)
+  }, [startTimer, time])
 
-  }, [props.timer])
-
-
-  if (!props.timer) {
+  if (!startTimer) {
     return <div></div>
   }
 
   return (
     <div className='timer'>
-      <div className='timer__text'>{`${seconds}`}</div>
+      <div className='timer__text'>{`${time}`}</div>
     </div>
   )
 }
