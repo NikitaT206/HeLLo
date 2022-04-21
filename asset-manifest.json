@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/HeLLo/static/css/main.05e6090e.css",
+    "main.js": "/HeLLo/static/js/main.f5e88067.js",
+    "index.html": "/HeLLo/index.html",
+    "main.05e6090e.css.map": "/HeLLo/static/css/main.05e6090e.css.map",
+    "main.f5e88067.js.map": "/HeLLo/static/js/main.f5e88067.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.05e6090e.css",
+    "static/js/main.f5e88067.js"
+  ]
+}
