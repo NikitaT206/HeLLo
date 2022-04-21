@@ -8,7 +8,7 @@ enum TimerActionTypes {
   START_TIMER = 'START_TIMER',
   SET_TIME = 'SET_TIME',
   RUNNING = 'RUNNING',
-  SET_TIMEOUT = 'SET_TIMEOUT'
+  SET_TIMEOUT = 'SET_TIMEOUT',
 }
 
 interface TimerSetTimeOutAction {

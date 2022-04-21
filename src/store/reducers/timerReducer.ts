@@ -9,7 +9,7 @@ const defaultState: TimerState = {
 export const timerReducer = (state = defaultState, action: TimerActions): TimerState => {
   switch(action.type) {
     case TimerActionTypes.SET_TIMEOUT:
-      return {time: 0, timeOut: true, startTimer: false}
+      return {...state, timeOut: true, startTimer: false, time: 10}
     case TimerActionTypes.RUNNING:
       return {...state, time: state.time - 1}
     case TimerActionTypes.SET_TIME:

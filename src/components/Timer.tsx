@@ -22,14 +22,13 @@ export function Timer(props: TimerInterface) {
     if (props.level4) setTime(9)
     if (props.level5) setTime(10)
     if (props.level6) setTime(11)
-  }, [props])
+  }, [props.level1, props.level2, props.level3, props.level4, props.level5, props.level6])
 
   useEffect(() => {
     let interval: any = null
     clearInterval(interval)
     if (startTimer) {
       interval = setInterval(() => {
-        setStartTimer(true)
         timerRunning()
         if (time <= 0) {
           clearInterval(interval)

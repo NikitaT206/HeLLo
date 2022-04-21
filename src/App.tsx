@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import './App.css';
 import { DropZone } from './components/DropZone';
 import { Letters } from './components/Letters';
@@ -16,7 +16,6 @@ function App() {
   const [level6, setLevel6] = useState(false)
   const [level7, setLevel7] = useState(false)
   
-
   const randomWord = returnWords()[Math.floor(Math.random() * returnWords().length)]
   const [word, setWord] = useState(randomWord)
 
@@ -55,26 +54,26 @@ function App() {
 
   function setLevels() {
     switch(count) {
-      case 3:
+      case 1:
         setLevel1(true)
         break
-      case 5:
+      case 2:
         setLevel1(false)
         setLevel2(true)
         break
-      case 7:
+      case 3:
         setLevel2(false)
         setLevel3(true)
         break
-      case 9:
+      case 4:
         setLevel3(false)
         setLevel4(true)
         break
-      case 11:
+      case 5:
         setLevel4(false)
         setLevel5(true)
         break
-      case 13:
+      case 6:
         setLevel5(false)
         setLevel6(true)
         break
@@ -92,7 +91,7 @@ function App() {
     setCurrentLetter(letter)
     setTimeout(() => {
       event.target.style.opacity = 0
-    })
+    }, 0)
   }
 
   function lettersDragEndHandler(event: any) {

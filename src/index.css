@@ -30,7 +30,6 @@ body {
   overflow: hidden;
 }
 
-
 .letter {
   font-size: 50px;
   width: 70px;
@@ -41,7 +40,7 @@ body {
   z-index: 5;
   cursor: grab;
   position: relative;
-  transition: .5s linear;
+  transition: transform 2s linear;
 }
 
 .drop-zone {
@@ -224,6 +223,15 @@ body {
   }
   100% {
     left: 50%;
+  }
+}
+
+@keyframes level6 {
+  from {
+    top: initial;
+  }
+  to {
+    top: -200px;
   }
 }
 

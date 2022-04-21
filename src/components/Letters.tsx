@@ -4,11 +4,9 @@ import { useCallback, useEffect, useMemo } from 'react'
 
 interface Letters {
   newGame: boolean,
-  // timer: boolean,
   arrayOfLetters: string[],
   lettersDragStartHandler: Function,
   lettersDragEndHandler: Function,
-  // onTimeOut: Function,
   level1: boolean,
   level2: boolean,
   level3: boolean,
@@ -25,28 +23,20 @@ export function Letters(props: Letters) {
     }
   }
 
-  const getRandom = useCallback(() => {
-    const random = Math.floor(Math.random() * 100)
+  const getRandom = useCallback((min, max) => {
+    const random = Math.floor(Math.random() * (max - min) + min)
     return random
   }, [])
-
-  useEffect(() => {
-    setInterval(() => {
-      getRandom()
-    }, 1000)
-  }, [getRandom])
 
   return (
     <div 
       className='letters'
       style={
         props.level3 ? {justifyContent: 'space-between'} : {} &&
-        props.level4 ? {flexDirection: 'column', alignContent: 'space-around', gap: '50px'} : {} 
+        props.level4 ? {flexDirection: 'column', alignContent: 'space-around', gap: '50px'} : {}
       }
     >
     <Timer 
-      // timer={props.timer} 
-      // onTimeOut={props.onTimeOut}
       level1={props.level1}
       level2={props.level2}
       level3={props.level3}
@@ -66,7 +56,11 @@ export function Letters(props: Letters) {
             props.level2 ? {animation: `level2 7s ease-in-out infinite alternate-reverse 0.${index}s`} : {} &&
             props.level3 ? level3(index) : {} &&
             props.level4 ? {animation: `level4 3s ease-in-out infinite  0.${index}s`} : {} &&
-            props.level5 ? {transform: `translateX(${getRandom()}%) translateY(${getRandom()}%)`} : {}
+            props.level5 ? {
+             
+              
+            }
+               : {}
           }
           draggable={true}
           onDragStart={(event => props.lettersDragStartHandler(event, letter, index))}
